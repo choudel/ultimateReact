@@ -1,21 +1,18 @@
-import { useState, useRef } from "react";
+import { forwardRef, useRef } from "react";
 
 export default function Counter(){
-    const [seconds, setSeconds] = useState(0);
-    const timerID = useRef<ReturnType<typeof setInterval> | null>(null);
-    const startTimer = ()=>{
-        timerID.current = setInterval(()=>{
-            setSeconds(currentSeconds => currentSeconds+1)
-        },1000)
-    }
-    const stopTimer =()=>{
-        clearInterval(timerID.current!)
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const focusInput = () =>{
+        inputRef.current?.focus()
     }
     return(
-        <div className="counter">
-            <button onClick={startTimer}>Start</button>
-            <button onClick={stopTimer}>Stop</button>
-            <p>seconds: {seconds}</p>
-        </div>
+        <>
+        <MyInput ref={inputRef}></MyInput>
+        <button onClick={focusInput}>Focus</button>
+        </> 
     )
 }
+
+const MyInput = forwardRef<HTMLInputElement>((props,ref)=>{
+    return <input ref={ref} {...props} style={{color:'red'}}></input>
+})
