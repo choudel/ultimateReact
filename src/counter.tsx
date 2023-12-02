@@ -1,28 +1,21 @@
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useRef } from "react";
 
 export default function Counter(){
-    const [count, setCount] = useState(0);
-    const [bool, setBool] = useState(false);
-    useLayoutEffect(()=>{
-        if(count===3){
-            setCount(4)
-        }
-    },[count])
-    useEffect(()=>{
-       
-        console.log('mounted')
-        
-        return ()=>console.log('unmount')
-    },[])
-    useEffect(()=>{
-        console.log('render')
-    })
-    
+    const [seconds, setSeconds] = useState(0);
+    const timerID = useRef<ReturnType<typeof setInterval> | null>(null);
+    const startTimer = ()=>{
+        timerID.current = setInterval(()=>{
+            setSeconds(currentSeconds => currentSeconds+1)
+        },1000)
+    }
+    const stopTimer =()=>{
+        clearInterval(timerID.current!)
+    }
     return(
         <div className="counter">
-            <button onClick={()=>setBool(!bool)}>Re-render</button>
-            <button onClick={()=>setCount(count+1)}>Increment</button>
-            <p>Count: {count}</p>
+            <button onClick={startTimer}>Start</button>
+            <button onClick={stopTimer}>Stop</button>
+            <p>seconds: {seconds}</p>
         </div>
     )
 }
